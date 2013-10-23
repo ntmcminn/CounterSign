@@ -44,6 +44,8 @@
     <properties>
         <alfresco.groupId>org.alfresco.enterprise</alfresco.groupId>
         <alfresco.version>4.1.5</alfresco.version>
+        <!-- uncomment this and comment out lines above to switch between
+        enterprise and community builds -->
         <!--<alfresco.groupId>org.alfresco</alfresco.groupId>
         <alfresco.version>4.2.d</alfresco.version>-->
         <app.log.root.level>WARN</app.log.root.level>
@@ -91,9 +93,10 @@
   <modules>
     <module>countersign-repo</module>
     <module>countersign-share</module>
-    <module>alfresco</module>
+    <!-- these modules are used in the debug environment (all-in-one archetype) -->
+    <!--<module>alfresco</module>
     <module>solr</module>
     <module>share</module>
-    <module>runner</module>
+    <module>runner</module>-->
   </modules>
 </project>
