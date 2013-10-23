@@ -1,0 +1,15 @@
+.artifact-list-item
+{
+	padding-left: 15px;
+	padding-bottom: 15px;
+}
+
+.empty-artifact-list
+{
+	padding: 4px;
+}
+
+.artifact-image
+{
+	margin-right: 4px;
+}

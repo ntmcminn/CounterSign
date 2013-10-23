@@ -1,0 +1,6 @@
+<webscript>
+   <shortname>My CounterSign Items</shortname>
+   <description>Gives a person access to their CounterSign managed keys and signatures</description>
+   <family>user-dashlet</family>
+   <url>/components/dashlets/countersign/my-countersign</url>
+</webscript>

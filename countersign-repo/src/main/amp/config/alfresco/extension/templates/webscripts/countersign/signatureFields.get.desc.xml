@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Signature Info</shortname>
+  <description>Get signature info</description>
+  <url>/countersign/signaturefields?{nodeRef}</url>
+  <format default="json">extension</format>
+  <authentication>user</authentication>
+  <family>countersign</family>
+</webscript>

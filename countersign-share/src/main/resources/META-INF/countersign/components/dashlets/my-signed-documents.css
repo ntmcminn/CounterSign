@@ -1,0 +1,22 @@
+.signed-documents-title
+{
+	padding-top: 5px;
+}
+
+.signed-documents-panel
+{
+
+}
+
+.signed-documents-panel-left
+{
+	float: left;
+	display: inline;
+}
+
+.signed-documents-panel-right
+{
+   display: inline;
+   vertical-align: top;
+   margin-top: 15px;
+}

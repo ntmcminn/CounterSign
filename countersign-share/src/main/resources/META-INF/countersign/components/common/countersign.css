@@ -1,0 +1,9 @@
+.alfresco-share .yui-panel .yui-gd .yui-u-cs
+{
+   width: 50%;
+}
+
+.alfresco-share .yui-panel .yui-gd .yui-u-cs.first
+{
+   width: 48%;
+}

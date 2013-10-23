@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<template-instance>
+   <template-type>org/alfresco/extension/countersign/add-signature-field</template-type>
+   <properties>
+      <pageFamily>countersign</pageFamily>
+   </properties>
+   <components>
+
+	  <!-- CounterSign configuration -->
+      <component>
+          <region-id>countersign-config</region-id>
+          <url>/components/signature/countersign-config</url>
+      </component>
+      
+      <!-- Title -->
+      <component>
+         <region-id>title</region-id>
+         <sub-components>
+            <sub-component id="default">
+            	<url>/components/title/simple-title</url>
+                <properties>
+                   <title>addsignaturefield.page.title</title>
+                   <subtitle>addsignaturefield.page.subtitle</subtitle>
+                </properties>
+            </sub-component>
+         </sub-components>
+      </component>
+
+      <component>
+         <region-id>signature-toolbar</region-id>
+         <url>/components/signature/toolbar/signature-toolbar</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+      
+      <!-- modified web previewer, allows drawing of signature regions -->
+      <component>
+         <region-id>web-preview</region-id>
+         	<url>/components/signature/web-preview-cs</url>
+            <properties>
+            	<nodeRef>{nodeRef}</nodeRef>
+            </properties>
+      </component>
+      
+      <!-- The signature form manager, used to assist in the handling of the sig submit -->
+      <component>
+      	<region-id>add-signature-field-form-mgr</region-id>
+      	<url>/components/signature/form-mgr/add-signature-field-form-mgr</url>
+      </component>
+      
+      <!-- Signature Form -->
+      <component>
+         <region-id>add-signature-field-form</region-id>
+         <url>/components/form</url>
+         <properties>
+            <submitType>json</submitType>
+            <showCaption>true</showCaption>
+            <formUI>true</formUI>
+            <showCancelButton>true</showCancelButton>
+            <showResetButton>true</showResetButton>
+            <itemKind>action</itemKind>
+            <itemId>add-signature-field-action</itemId>
+            <destination>{nodeRef}</destination>
+            <redirect>/share/page/document-details?nodeRef={nodeRef}</redirect>
+            <mode>create</mode>
+         </properties>
+      </component>
+      
+   </components>
+</template-instance>

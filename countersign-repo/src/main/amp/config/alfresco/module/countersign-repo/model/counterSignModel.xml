@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Definition of new Model -->
+<model name="csign:signaturemodel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+    
+    <description>CounterSign for Alfresco - Signature Content Model</description>
+    <author>Nathan McMinn</author>
+    <version>1.0</version>
+
+    <imports>
+        <!-- Import Alfresco Dictionary Definitions -->
+        <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+        <!-- Import Alfresco Content Domain Model Definitions -->
+        <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+    </imports>
+    
+    <!-- create the PDF toolkit namespace -->
+    <namespaces>
+        <namespace uri="http://countersign.it/model/signature/1.0" prefix="csign" />
+    </namespaces>
+
+    <types>
+        
+        <!-- pkcs12 keystore -->
+        <type name="csign:pkcs12">
+            <title>PKCS12 Key Store</title>
+            <parent>cm:cmobject</parent>
+            <archive>false</archive>
+            <properties>
+                <!-- stores the key aliases in this key store -->
+                <property name="csign:aliases">
+                    <type>d:text</type>
+                    <multiple>true</multiple>
+                    <index enabled="false"/>
+                </property>
+            </properties>
+        </type>
+        
+        <type name="csign:publicKey">
+            <title>A user's public key</title>
+            <parent>cm:cmobject</parent>
+            <properties>
+                <!-- how is this key encoded? -->
+                <property name="csign:keyEncoding">
+                    <type>d:text</type>
+                    <multiple>false</multiple>
+                    <index enabled="false"/>
+                </property>
+            </properties>
+        </type>
+        
+        <!-- a signature image and the JSON used to generate it -->
+        <type name="csign:signatureImage">
+            <title>Signature Image</title>
+            <parent>cm:cmobject</parent>
+            <properties>
+                <!-- the JSON from the signature pad -->
+                <property name="csign:signatureJson">
+                    <type>d:text</type>
+                    <index enabled="false"/>
+                </property>
+            </properties>
+        </type>
+        
+        <!-- signature type -->
+        <type name="csign:signature">
+            <title>Applied Signature</title>
+            <parent>cm:cmobject</parent>
+            <properties>
+                <!-- 
+                this field is used to store the full user name for two reasons:
+                1.  If an Alfresco user is deleted, we still need to know who they were
+                2.  There is a possibility of an external provider that is called
+                	from a signature provider implementation, meaning that no actual
+                	Alfresco user exists for this signer
+                -->
+                <property name="csign:externalSigner">
+                    <title>External Signer</title>
+                    <type>d:text</type>
+                </property>
+                <property name="csign:signatureDate">
+                    <title>Signature Date</title>
+                    <type>d:datetime</type>
+                </property>
+                <property name="csign:location">
+                    <title>Location</title>
+                    <type>d:text</type>
+                </property>
+                <property name="csign:reason">
+                    <title>Reason</title>
+                    <type>d:text</type>
+                </property>
+                <property name="csign:signatureField">
+                    <title>PDF Form Signature Field</title>
+                    <type>d:text</type>
+                    <index enabled="false"/>
+                </property>
+                <property name="csign:signaturePosition">
+                    <title>PDF Signature Position</title>
+                    <type>d:text</type>
+                    <index enabled="false"/>
+                </property>
+                <property name="csign:signaturePage">
+                    <title>PDF Form Signature Page</title>
+                    <type>d:int</type>
+                    <index enabled="false"/>
+                </property>
+                <property name="csign:docHash">
+                	<title>Document Hash</title>
+                	<type>d:text</type>
+                	<index enabled="false"/>
+                </property>
+            </properties>
+            <associations>
+	            <association name="csign:signedBy">
+	               <title>Signed By</title>
+	               <source>
+	                  <mandatory>false</mandatory>
+	                  <many>true</many>
+	               </source>
+	               <target>
+	                  <class>cm:person</class>
+	                  <mandatory>false</mandatory>
+	                  <many>false</many>
+	               </target>
+	            </association>
+         	</associations>
+            <mandatory-aspects>
+            	<aspect>cm:geographic</aspect>
+         	</mandatory-aspects>
+        </type>
+        
+    </types>
+    
+    <aspects>
+        
+    	<!-- applied when a PDF document is digitally signed -->
+    	<!-- 
+    	this aspect needs to change, signer(s) should be a one->many association
+    	to capture multiple signers 
+    	-->
+        <aspect name="csign:signed">
+            <title>Signed Document</title>
+			<!-- associations to signature nodes -->
+			<associations>
+	            <child-association name="csign:signatures">
+	               <source>
+	                  <mandatory>false</mandatory>
+	                  <many>false</many>
+	               </source>
+	               <target>
+	                  <class>csign:signature</class>
+	                  <mandatory>false</mandatory>
+	                  <many>true</many>
+	               </target>
+	            </child-association>
+         	</associations>
+        </aspect>
+        
+        <!--  
+        applied when a PDF document should be "signable", triggers a 
+        content policy that extracts the signature fields in a doc 
+        -->
+        <aspect name="csign:signable">
+            <title>Signable</title>
+            <properties>
+                <property name="csign:signatureFields">
+                    <title>Signature Fields</title>
+                    <type>d:text</type>
+                    <multiple>true</multiple>
+                    <index enabled="false"/>
+                </property>
+            </properties>
+        </aspect>
+        
+        <aspect name="csign:signer">
+           <associations>
+	            <child-association name="csign:signerSignatureImage">
+	               <source>
+					  <mandatory>false</mandatory>
+	                  <many>false</many>
+	               </source>
+	               <target>
+	                  <class>csign:signatureImage</class>
+	                  <mandatory>false</mandatory>
+	                  <many>true</many>
+	               </target>
+	            </child-association>
+	            <child-association name="csign:signerKeystore">
+	               <source>
+	                  <mandatory>false</mandatory>
+	                  <many>false</many>
+	               </source>
+	               <target>
+	                  <class>csign:pkcs12</class>
+	                  <mandatory>false</mandatory>
+	                  <many>true</many>
+	               </target>
+	            </child-association>
+	            <child-association name="csign:signerPublicKey">
+	               <source>
+	                  <mandatory>false</mandatory>
+	                  <many>false</many>
+	               </source>
+	               <target>
+	                  <class>csign:publicKey</class>
+	                  <mandatory>false</mandatory>
+	                  <many>true</many>
+	               </target>
+	            </child-association>
+         	</associations>
+        </aspect>
+        
+    </aspects>
+</model>

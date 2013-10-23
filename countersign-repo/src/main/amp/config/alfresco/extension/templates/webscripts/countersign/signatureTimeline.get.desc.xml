@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Signature timeline</shortname>
+  <description>Get signature timeline data</description>
+  <url>/countersign/signaturetimeline?{nodeRef}</url>
+  <format default="json">extension</format>
+  <authentication>user</authentication>
+  <family>countersign</family>
+</webscript>

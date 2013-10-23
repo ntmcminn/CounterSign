@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<template-instance>
+	<template-type>org/alfresco/extension/countersign/sign-document</template-type>
+	<properties>
+		<pageFamily>countersign</pageFamily>
+	</properties>
+	<components>
+
+		<!-- Title -->
+		<component>
+			<region-id>title</region-id>
+			<url>/components/title/simple-title</url>
+			<properties>
+				<title>addsignature.page.title</title>
+				<subtitle>addsignature.page.subtitle</subtitle>
+			</properties>
+		</component>
+
+		<component>
+			<region-id>signature-toolbar</region-id>
+			<url>/components/signature/toolbar/signature-toolbar</url>
+			<properties>
+				<nodeRef>{nodeRef}</nodeRef>
+			</properties>
+		</component>
+
+		<!-- modified web previewer, allows drawing of signature regions -->
+		<component>
+			<region-id>web-preview</region-id>
+			<sub-components>
+				<sub-component id="default">
+					<evaluations>
+						<!-- if this is a PDF, show the countersign previewer (draw region enabled) -->
+						<evaluation id="pdf">
+							<evaluators>
+								<evaluator type="signature.type.evaluator" />
+							</evaluators>
+							<url>/components/signature/web-preview-cs</url>
+							<properties>
+								<nodeRef>{nodeRef}</nodeRef>
+							</properties>
+						</evaluation>
+						<evaluation id="other">
+							<url>/components/preview/web-preview</url>
+							<properties>
+								<nodeRef>{nodeRef}</nodeRef>
+							</properties>
+						</evaluation>
+					</evaluations>
+				</sub-component>
+			</sub-components>
+		</component>
+
+		<!-- The signature form manager, used to assist in the handling of the 
+			sig submit -->
+		<component>
+			<region-id>signature-form-mgr</region-id>
+			<url>/components/signature/form-mgr/signature-form-mgr</url>
+		</component>
+
+		<!-- Signature Form -->
+		<component>
+			<region-id>signature-form</region-id>
+			<sub-components>
+				<sub-component id="default">
+					<evaluations>
+						<!-- if this is a PDF, show the PDF action form -->
+						<evaluation id="pdf">
+							<evaluators>
+								<evaluator type="signature.type.evaluator" />
+							</evaluators>
+							<url>/components/form</url>
+							<properties>
+								<submitType>json</submitType>
+								<showCaption>true</showCaption>
+								<formUI>true</formUI>
+								<showCancelButton>true</showCancelButton>
+								<showResetButton>true</showResetButton>
+								<itemKind>action</itemKind>
+								<itemId>pdf-signature-provider-action</itemId>
+								<destination>{nodeRef}</destination>
+								<redirect>/share/page/document-details?nodeRef={nodeRef}
+								</redirect>
+								<mode>create</mode>
+							</properties>
+						</evaluation>
+						<!-- if this is not a PDF, show the generic content signature form -->
+						<evaluation id="other">
+							<url>/components/form</url>
+							<properties>
+								<submitType>json</submitType>
+								<showCaption>true</showCaption>
+								<formUI>true</formUI>
+								<showCancelButton>true</showCancelButton>
+								<showResetButton>true</showResetButton>
+								<itemKind>action</itemKind>
+								<itemId>sign-content-action</itemId>
+								<destination>{nodeRef}</destination>
+								<redirect>/share/page/document-details?nodeRef={nodeRef}
+								</redirect>
+								<mode>create</mode>
+							</properties>
+						</evaluation>
+					</evaluations>
+				</sub-component>
+			</sub-components>
+		</component>
+
+	</components>
+</template-instance>

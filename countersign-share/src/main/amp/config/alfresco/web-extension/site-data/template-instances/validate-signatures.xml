@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<template-instance>
+   <template-type>org/alfresco/extension/countersign/validate-signatures</template-type>
+   <properties>
+      <pageFamily>countersign</pageFamily>
+   </properties>
+   <components>
+
+	  <!-- CounterSign configuration -->
+      <component>
+          <region-id>countersign-config</region-id>
+          <url>/components/signature/countersign-config</url>
+      </component>
+      
+      <!-- Title -->
+      <component>
+         <region-id>title</region-id>
+         <sub-components>
+            <sub-component id="default">
+            	<url>/components/title/simple-title</url>
+                <properties>
+                   <title>validatesignatures.page.title</title>
+                   <subtitle>validatesignatures.page.subtitle</subtitle>
+                </properties>
+            </sub-component>
+         </sub-components>
+      </component>
+
+      <component>
+         <region-id>signature-toolbar</region-id>
+         <url>/components/signature/toolbar/signature-toolbar</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+      
+      <component>
+         <region-id>signature-status</region-id>
+         <url>/components/signature/signature-status</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+      
+      <!-- Document Metadata -->
+      <component>
+         <region-id>document-metadata</region-id>
+         <url>/components/document-details/document-metadata</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+      
+   </components>
+</template-instance>

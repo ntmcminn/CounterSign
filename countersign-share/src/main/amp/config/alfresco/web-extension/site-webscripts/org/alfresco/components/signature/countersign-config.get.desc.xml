@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>CounterSign Configuration</shortname>
+  <description>CounterSign Configuration Component</description>
+  <url>/components/signature/countersign-config</url>
+</webscript>

@@ -1,0 +1,432 @@
+<alfresco-config>
+   
+	<!-- Configure visibility of pdft:signed aspect in Share -->
+	<config replace="false" evaluator="string-compare" condition="DocumentLibrary">
+		<aspects>
+		    <visible>
+				<aspect name="csign:signable" />
+			</visible>
+			<addable>
+			</addable>
+			<removeable>
+			</removeable>
+		</aspects>
+	</config>
+	
+	<!--  Configure forms for csign:signed aspect in Share -->
+	<config evaluator="aspect" condition="csign:signed"> 
+		<forms>
+       		<form>
+	            <field-visibility>
+				</field-visibility> 
+				<appearance>
+				</appearance>
+			</form>
+		</forms>
+	</config>
+	
+	<!-- Configure forms for csign:signable aspect in Share -->
+	<config evaluator="aspect" condition="csign:signable"> 
+		<forms>
+       		<form>
+	            <field-visibility>
+				</field-visibility> 
+				<appearance>
+				</appearance>
+			</form>
+		</forms>
+	</config>
+	
+	<!-- property view for signature artifacts -->
+	<config evaluator="node-type" condition="csign:signature">
+		<forms>
+			<form>
+				<field-visibility>
+				</field-visibility>
+				<appearance>
+				</appearance>
+			</form>
+		</forms>
+	</config>
+	
+	<!-- Configure advanced search for pdft:signed aspect in Share -->
+	<config evaluator="string-compare" condition="AdvancedSearch">
+	    <advanced-search>
+	        <forms>
+	            <form labelId="countersign.aspect.signed.search.type" 
+	            	descriptionId="countersign.aspect.signed.search.description" id="signeddocsearch">cm:content</form>
+	        </forms>
+	    </advanced-search>
+	</config>
+	
+	<!-- Advanced search form for items with pdft:signed aspect -->
+	<config evaluator="model-type" condition="cm:content">
+    	<forms>
+    		<!-- search for signed PDF documents -->
+    		<form id="signeddocsearch">
+				<field-visibility>
+					<show id="cm:name" force="true" />
+					<show id="cm:title" force="true" /> 
+					<show id="cm:description" force="true" /> 
+					<show id="cm:modified" force="true" />
+					<show id="cm:modifier" force="true" />
+					<show id="csign:signatureDate" force="true" />
+					<show id="csign:reason" force="true" />
+					<show id="csign:location" force="true" />
+	            </field-visibility>
+	            
+	            <appearance>
+	                <field id="cm:modifier">
+	                    <control>
+	                        <control-param name="forceEditable">true</control-param>
+	                    </control>
+	                </field>
+	                <field id="cm:modified">
+	                    <control template="/org/alfresco/components/form/controls/daterange.ftl" />
+					</field>
+	                <field id="csign:signatureDate" label-id="prop.pdft_signaturedate">
+	                    <control template="/org/alfresco/components/form/controls/daterange.ftl" />
+	                </field>
+	                <field id="csign:reason" label-id="prop.pdft_reason">
+	                    <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+	                </field>
+	                <field id="csign:location" label-id="prop.pdft_location">
+	                    <control template="/org/alfresco/components/form/controls/textfield.ftl" />
+	                </field>
+				</appearance>
+	        </form>
+    	</forms>
+    </config>
+    
+	<!-- Share config elements for the doclib actions -->
+	<config evaluator="string-compare" condition="DocLibActions">
+		<actions>
+			<!--
+			The sign-document action is for PDFs only (as they have special signature
+			needs and features
+			-->
+	        <action id="sign-document" type="pagelink" label="actions.countersign.signDocument">
+	           <param name="page">sign-document?nodeRef={node.nodeRef}&amp;sigType=pdf</param>
+	           <evaluator>evaluator.countersign.doclib.action.signableMimetype</evaluator>
+	        </action>
+			
+			<!--
+			The sign-content action can be used to generate a signature for any content
+			type, and store it as an externally attached signature. 
+			-->
+			<action id="sign-content" type="pagelink" label="actions.countersign.signDocument">
+	           <param name="page">sign-document?nodeRef={node.nodeRef}</param>
+	           <evaluator negate="true">evaluator.countersign.doclib.action.signableMimetype</evaluator>
+	        </action>
+	        
+	        <!-- 
+	        Viewing signatures can be done for any signed document type, as the shown data
+	        is stored in the Alfresco signature node.  Works for both PDF and non-pdf.	
+	        -->
+	        <action id="view-signatures" type="pagelink" label="actions.countersign.viewSignatures">
+	           <param name="page">view-signatures?nodeRef={node.nodeRef}</param>
+	           <evaluator>evaluator.countersign.doclib.indicator.isDocumentSigned</evaluator>
+	        </action>
+	        
+	        <!-- 
+	        Show the "Add Signature Field" action, only for unsigned PDFs.  Once a doc is 
+	        signed, a field cannot be added without invalidating the existing signatures.
+	         -->
+	        <action id="add-signature-field" type="pagelink" label="actions.countersign.addSignatureField">
+	           <param name="page">add-signature-field?nodeRef={node.nodeRef}</param>
+	           <evaluator>evaluator.countersign.doclib.action.signableMimetype</evaluator>
+	           <evaluator negate="true">evaluator.countersign.doclib.indicator.isDocumentSigned</evaluator>
+	        </action>
+	        
+	        <!-- 
+	        validation should be a separate action from viewing, since validation
+	        may be a computationally intense activity.  For now, only show the validation
+	        page option for non-PDF docs, since PDFs can be easily validated offline
+	        using Acrobat 
+	        -->
+	        <action id="validate-signatures" type="pagelink" label="actions.countersign.validateSignatures">
+	           <param name="page">validate-signatures?nodeRef={node.nodeRef}</param>
+	           <evaluator negate="true">evaluator.countersign.doclib.action.signableMimetype</evaluator>
+	           <evaluator>evaluator.countersign.doclib.indicator.isDocumentSigned</evaluator>
+	        </action>
+		</actions>
+		
+		<actionGroups>
+			<actionGroup id="document-browse">
+				<action index="601" id="sign-document"/>
+				<action index="602" id="sign-content"/>
+				<action index="603" id="view-signatures"/>
+				<action index="604" id="add-signature-field"/>
+				<action index="605" id="validate-signatures"/>
+			</actionGroup>
+			<actionGroup id="document-details">
+				<action index="601" id="sign-document"/>
+				<action index="602" id="sign-content"/>
+				<action index="603" id="view-signatures"/>
+				<action index="604" id="add-signature-field"/>
+				<action index="605" id="validate-signatures"/>
+			</actionGroup>
+		</actionGroups>
+	</config>
+	
+	<!-- document library indicators for signed and encrypted documents -->
+	<config evaluator="string-compare" condition="DocumentLibrary">
+        <indicators>
+            <indicator id="evaluator.countersign.doclib.indicator.isDocumentSigned"
+                       icon="signature-16.png"
+                       index="601"
+                       label="indicator.countersign.signed">
+                <evaluator>evaluator.countersign.doclib.indicator.isDocumentSigned</evaluator>
+            </indicator>
+        </indicators>
+    </config>
+     
+    <config evaluator="string-compare" condition="pdf-signature-provider-action">
+    	<forms>
+        	<form>
+        	    <field-visibility>
+        	        <show id="location" />
+        	        <show id="reason" />
+        	        <show id="key-password" />
+        	        <show id="visible" />
+        	        <show id="position" />
+        	        <show id="graphic" />
+        	        <show id="signature-json" />
+        	        <show id="geolocation" />
+        	    </field-visibility>
+                <appearance>
+                    <field id="key-password">
+                    	<control template="/org/alfresco/components/form/controls/signaturepassword.ftl" />
+                    	<constraint-handlers>
+         					<constraint type="MANDATORY" validation-handler="CounterSign.validation.PasswordStrength" event="keyup,propertychange" />
+      					</constraint-handlers>
+                    </field>
+                    <field id="visible">
+                        <control template="/org/alfresco/components/form/controls/hidingCheckbox.ftl">
+                        	<control-param name="hideProperties">prop_graphic,prop_position,prop_signature-json</control-param>    
+                        </control>
+                    </field>
+                    <field id="position">
+                        <control template="/org/alfresco/components/form/controls/signatureposition.ftl" >
+                        	<control-param name="placeholderOnly">false</control-param>
+                        </control>
+                    </field>
+                    <field id="graphic">
+                        <control template="/org/alfresco/components/form/controls/hidingCheckbox.ftl">
+                        	<control-param name="hideProperties">prop_signature-json</control-param>    
+                        </control>
+                    </field>
+                    <field id="signature-json">
+                        <control template="/org/alfresco/components/form/controls/signaturepad.ftl" />
+                    </field>
+                    <field id="geolocation">
+                        <control template="/org/alfresco/components/form/controls/geolocation.ftl" />
+                    </field>
+                </appearance>
+            </form>
+        </forms>
+    </config>
+    
+    <config evaluator="string-compare" condition="sign-content-action">
+    	<forms>
+        	<form>
+        	    <field-visibility>
+        	        <show id="location" />
+        	        <show id="reason" />
+        	        <show id="key-password" />
+        	        <show id="geolocation" />
+        	    </field-visibility>
+                <appearance>
+                    <field id="key-password">
+                    	<control template="/org/alfresco/components/form/controls/signaturepassword.ftl" />
+                    	<constraint-handlers>
+         					<constraint type="MANDATORY" validation-handler="CounterSign.validation.PasswordStrength" event="keyup,propertychange" />
+      					</constraint-handlers>
+                    </field>
+                    <field id="geolocation">
+                        <control template="/org/alfresco/components/form/controls/geolocation.ftl" />
+                    </field>
+                </appearance>
+            </form>
+        </forms>
+    </config>
+    
+    <config evaluator="string-compare" condition="add-signature-field-action">
+    	<forms>
+        	<form>
+        	    <field-visibility>
+        	        <show id="field-name" />
+        	        <show id="position" />
+        	    </field-visibility>
+                <appearance>
+                    <field id="field-name">
+                    	<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+                    </field>
+                    <field id="position">
+                        <control template="/org/alfresco/components/form/controls/signatureposition.ftl" >
+                        	<control-param name="placeholderOnly">true</control-param>
+                        </control>
+                    </field>
+                </appearance>
+            </form>
+        </forms>
+    </config>
+    
+	<!-- Workflow forms -->
+	
+	<!-- Send for signature workflow -->
+   <config evaluator="string-compare" condition="activiti$counterSignSendForSignature">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="bpm:workflowDescription" />
+               <show id="bpm:workflowDueDate" />
+               <show id="bpm:assignee" />
+               <show id="packageItems" />
+               <show id="bpm:sendEMailNotifications" />
+            </field-visibility>
+            <appearance>
+               <set id="" appearance="title" label-id="workflow.set.general" />
+               <set id="info" appearance="" template="/org/alfresco/components/form/2-column-set.ftl" />
+               <set id="assignee" appearance="title" label-id="countersign.workflow.set.signer" />
+               <set id="items" appearance="title" label-id="countersign.workflow.set.items" />
+               <set id="other" appearance="title" label-id="workflow.set.other" />
+
+               <field id="bpm:workflowDescription" label-id="workflow.field.message">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%</control-param>
+                  </control>
+               </field>
+               <field id="bpm:workflowDueDate" label-id="workflow.field.due" set="info">
+                  <control template="/org/alfresco/components/form/controls/date.ftl">
+                      <control-param name="showTime">false</control-param>
+                      <control-param name="submitTime">false</control-param>
+                  </control>
+               </field>
+               <field id="bpm:assignee" label-id="countersign.workflow.field.signer" set="assignee" />
+               <field id="packageItems" set="items" />
+               <field id="bpm:sendEMailNotifications" set="other" label-id="countersign.workflow.field.emailnotifications">
+                  <control template="/org/alfresco/components/form/controls/workflow/email-notification.ftl" />
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+   
+	<!-- Signing task, used when a user has been assigned a doc to sign  -->
+   <config evaluator="task-type" condition="csignwf:signingTask">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="bpm:workflowDescription" />
+               <show id="bpm:workflowDueDate" />
+               <show id="bpm:workflowPriority" />
+               <show id="bpm:assignee" />
+               <show id="packageItems" />
+               <show id="bpm:sendEMailNotifications" />
+               <show id="csignwf:signatureOutcome" />
+            </field-visibility>
+            <appearance>
+               <set id="" appearance="title" label-id="workflow.set.general" />
+               <set id="info" appearance="" template="/org/alfresco/components/form/2-column-set.ftl" />
+               <set id="assignee" appearance="title" label-id="countersign.workflow.set.signer" />
+               <set id="items" appearance="title" label-id="countersign.workflow.set.items" />
+               <set id="other" appearance="title" label-id="workflow.set.other" />
+               <set id="response" appearance="title" label-id="workflow.set.response" />
+               
+               <field id="bpm:workflowDescription" label-id="workflow.field.message">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%</control-param>
+                  </control>
+               </field>
+               <field id="bpm:workflowDueDate" label-id="workflow.field.due" set="info">
+                  <control template="/org/alfresco/components/form/controls/date.ftl">
+                      <control-param name="showTime">false</control-param>
+                      <control-param name="submitTime">false</control-param>
+                  </control>
+               </field>
+               <field id="bpm:assignee" label-id="countersign.workflow.field.signer" set="assignee" />
+               <field id="packageItems" set="items" >
+               	  <control template="/org/alfresco/components/form/controls/signaturepackageitem.ftl" />
+               </field>
+               <field id="bpm:sendEMailNotifications" set="other" label-id="countersign.workflow.field.emailnotifications">
+                  <control template="/org/alfresco/components/form/controls/workflow/email-notification.ftl" />
+               </field>
+               <field id="csignwf:signatureOutcome" label-id="countersign.workflow.field.signingoutcome" set="response">
+                  <control template="/org/alfresco/components/form/controls/workflow/activiti-transitions.ftl" />
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>	
+   
+   <!-- Signed task, indicating to the initiator that a doc has been signed -->
+   <config evaluator="task-type" condition="csignwf:confirmSignatureTask">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="bpm:workflowDescription" />
+               <show id="packageItems" />
+               <show id="bpm:sendEMailNotifications" />
+               <show id="csignwf:confirmSignatureOutcome" />
+            </field-visibility>
+            <appearance>
+               <set id="" appearance="title" label-id="workflow.set.general" />
+               <set id="items" appearance="title" label-id="countersign.workflow.set.items" />
+               <set id="other" appearance="title" label-id="workflow.set.other" />
+               <set id="response" appearance="title" label-id="workflow.set.response" />
+               
+               <field id="bpm:workflowDescription" label-id="workflow.field.message">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%</control-param>
+                  </control>
+               </field>
+               <field id="packageItems" set="items" >
+               	  <control template="/org/alfresco/components/form/controls/signaturepackageitem.ftl" />
+               </field>
+               <field id="bpm:sendEMailNotifications" set="other" label-id="countersign.workflow.field.emailnotifications">
+                  <control template="/org/alfresco/components/form/controls/workflow/email-notification.ftl" />
+               </field>
+               <field id="csignwf:confirmSignatureOutcome" label-id="countersign.workflow.field.confirmoutcome" set="response">
+                  <control template="/org/alfresco/components/form/controls/workflow/activiti-transitions.ftl" />
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+   
+   <!-- Rejected task, indicating that the assigned signer refused to sign -->
+   <config evaluator="task-type" condition="csignwf:rejectedTask">
+      <forms>
+         <form>
+            <field-visibility>
+               <show id="bpm:workflowDescription" />
+               <show id="packageItems" />
+               <show id="bpm:sendEMailNotifications" />
+               <show id="csignwf:signatureOutcome" />
+            </field-visibility>
+            <appearance>
+               <set id="" appearance="title" label-id="workflow.set.general" />
+               <set id="items" appearance="title" label-id="countersign.workflow.set.items" />
+               <set id="other" appearance="title" label-id="workflow.set.other" />
+               <set id="response" appearance="title" label-id="workflow.set.response" />
+               
+               <field id="bpm:workflowDescription" label-id="workflow.field.message">
+                  <control template="/org/alfresco/components/form/controls/textarea.ftl">
+                     <control-param name="style">width: 95%</control-param>
+                  </control>
+               </field>
+               <field id="packageItems" set="items" >
+               	  <control template="/org/alfresco/components/form/controls/signaturepackageitem.ftl" />
+               </field>
+               <field id="bpm:sendEMailNotifications" set="other" label-id="countersign.workflow.field.emailnotifications">
+                  <control template="/org/alfresco/components/form/controls/workflow/email-notification.ftl" />
+               </field>
+               <field id="csignwf:signatureOutcome" label-id="workflow.field.outcome" set="response">
+                  <control template="/org/alfresco/components/form/controls/workflow/activiti-transitions.ftl" />
+               </field>
+            </appearance>
+         </form>
+      </forms>
+   </config>
+</alfresco-config>

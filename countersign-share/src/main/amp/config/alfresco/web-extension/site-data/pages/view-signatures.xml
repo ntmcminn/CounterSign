@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <title>View Signatures</title>
+   <title-id>page.viewSignatures.title</title-id>
+   <description>View signatures</description>
+   <description-id>page.viewSignatures.description</description-id>
+   <template-instance>view-signatures</template-instance>
+   <authentication>user</authentication>
+</page>

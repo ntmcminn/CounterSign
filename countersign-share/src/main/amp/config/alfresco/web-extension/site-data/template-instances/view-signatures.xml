@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<template-instance>
+   <template-type>org/alfresco/extension/countersign/view-signatures</template-type>
+   <properties>
+      <pageFamily>countersign</pageFamily>
+   </properties>
+   <components>
+
+      <!-- CounterSign configuration -->
+      <component>
+          <region-id>countersign-config</region-id>
+          <url>/components/signature/countersign-config</url>
+      </component>
+      
+      <!-- Title -->
+      <component>
+         <region-id>title</region-id>
+         <sub-components>
+            <sub-component id="default">
+            	<url>/components/title/simple-title</url>
+                <properties>
+                   <title>viewsignatures.page.title</title>
+                   <subtitle>viewsignatures.page.subtitle</subtitle>
+                </properties>
+            </sub-component>
+         </sub-components>
+      </component>
+
+      <component>
+         <region-id>signature-toolbar</region-id>
+         <url>/components/signature/toolbar/signature-toolbar</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+      
+      <!-- WebPreview -->
+      <component>
+         <region-id>web-preview</region-id>
+         <sub-components>
+            <sub-component id="default">
+               <evaluations>
+                  <evaluation>
+                     <evaluators>
+                        <evaluator type="config.component.evaluator">
+                           <params>
+                              <element>DocumentDetails/document-details/display-web-preview</element>
+                           </params>
+                        </evaluator>
+                     </evaluators>
+                     <url>/components/preview/web-preview</url>
+                     <properties>
+                        <nodeRef>{nodeRef}</nodeRef>
+                     </properties>
+                  </evaluation>
+               </evaluations>
+            </sub-component>
+         </sub-components>
+      </component>
+      
+      <!-- Signature History-->
+      <component>
+         <region-id>signature-list</region-id>
+         <url>/components/signature/signature-list</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+      
+      <component>
+         <region-id>signature-map</region-id>
+         <url>/components/signature/signature-map</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+      
+      <component>
+         <region-id>signature-timeline</region-id>
+         <url>/components/signature/signature-timeline</url>
+         <properties>
+            <nodeRef>{nodeRef}</nodeRef>
+         </properties>
+      </component>
+
+   </components>
+</template-instance>

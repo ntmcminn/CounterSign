@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+    <!--  Repository managed signature provider, generates keystore automatically -->
+    <bean id="countersign.repositoryManagedSignatureProviderFactory" 
+        class="org.alfresco.extension.countersign.signature.RepositoryManagedSignatureProviderFactory">
+        <property name="validDuration">
+        	<value>${countersign.signature.validDuration}</value>
+        </property>
+        <property name="alias">
+        	<value>${countersign.signature.alias}</value>
+        </property>
+        <property name="enableTrustedCerts">
+        	<value>${countersign.signature.enableTrustedCerts}</value>
+        </property>
+        <property name="trustedKeystorePath">
+        	<value>${countersign.signature.trustedKeystorePath}</value>
+        </property>
+        <property name="trustedKeystorePassword">
+        	<value>${countersign.signature.trustedKeystorePassword}</value>
+        </property>
+        <property name="trustedCertAlias">
+        	<value>${countersign.signature.trustedCertAlias}</value>
+        </property>
+        <property name="trustedKeyAlias">
+        	<value>${countersign.signature.trustedKeyAlias}</value>
+        </property>
+        <property name="trustedKeyPassword">
+        	<value>${countersign.signature.trustedKeyPassword}</value>
+        </property>
+        <property name="hashAlgorithm">
+   			<value>${countersign.signature.hashAlgorithm}</value>
+   		</property>
+   		<property name="signatureAlgorithm">
+   			<value>${countersign.signature.signatureAlgorithm}</value>
+   		</property>
+   		<property name="javaSignatureProvider">
+   			<value>${countersign.signature.java.provider}</value>
+   		</property>
+        <property name="serviceRegistry">
+			<ref bean="ServiceRegistry" />
+		</property>
+		<property name="counterSignService">
+        	<ref bean="countersign.Service"/>
+        </property>
+    </bean>
+	
+	<!--  CounterSign JavaScript Service API -->
+    <bean id="countersign.scriptService" parent="baseJavaScriptExtension" 
+        class="org.alfresco.extension.countersign.service.ScriptCounterSignService">
+        <property name="extensionName">
+            <value>countersign</value>
+        </property>     
+        <property name="serviceRegistry">
+            <ref bean ="ServiceRegistry"/>
+        </property>
+        <property name="signatureProviderFactory">
+            <ref bean="countersign.repositoryManagedSignatureProviderFactory" />
+        </property>
+        <property name="extensionConfig">
+            <ref bean="countersign.client.config" />
+        </property>
+        <property name="counterSignWorkflowIds">
+        	<list>
+        		<value>activiti$counterSignSendForSignature</value>
+        	</list>
+        </property>
+        <property name="counterSignService">
+        	<ref bean="countersign.Service"/>
+        </property>
+    </bean>
+    
+    <!-- CounterSign Java Service API-->
+    <bean id="countersign.Service"
+        class="org.alfresco.extension.countersign.service.CounterSignServiceImpl">    
+        <property name="serviceRegistry">
+            <ref bean ="ServiceRegistry"/>
+        </property>
+    </bean>
+    
+	<!-- behavior to extract PDF signature fields from a doc when the signable aspect is added -->
+	<bean id="countersign.signableDocumentBehavior" 
+	    class="org.alfresco.extension.countersign.behavior.SignableDocumentBehavior" 
+	    init-method="init" depends-on="countersign.signatureModel">
+		<property name="serviceRegistry">
+		    <ref bean="ServiceRegistry" />
+		</property>
+    	<property name="policyComponent" >
+    	    <ref bean="policyComponent"/>
+    	</property>
+	</bean>
+	
+	<!-- pdfprovidersignature -->
+	<bean id="pdf-signature-provider-action"
+		class="org.alfresco.extension.countersign.action.executer.PDFSignatureProviderActionExecuter"
+		parent="action-executer" depends-on="countersign.bundles">
+		<property name="serviceRegistry">
+			<ref bean="ServiceRegistry" />
+		</property>
+		<property name="signatureProviderFactory">
+            <ref bean="countersign.repositoryManagedSignatureProviderFactory" />
+        </property>
+		<property name="applicableTypes">
+            <list>
+                <value>{http://www.alfresco.org/model/content/1.0}content</value>
+            </list>
+        </property>
+        <property name="alias">
+       		<value>${countersign.signature.alias}</value>
+   		</property>
+	</bean>
+	
+	<bean id="add-signature-field-action"
+		class="org.alfresco.extension.countersign.action.executer.PDFAddSignatureFieldActionExecuter"
+		parent="action-executer" depends-on="countersign.bundles">
+		<property name="serviceRegistry">
+			<ref bean="ServiceRegistry" />
+		</property>
+		<property name="applicableTypes">
+            <list>
+                <value>{http://www.alfresco.org/model/content/1.0}content</value>
+            </list>
+        </property>
+	</bean>
+	
+	<bean id="sign-content-action"
+		class="org.alfresco.extension.countersign.action.executer.ContentSignatureActionExecuter"
+		parent="action-executer" depends-on="countersign.bundles">
+		<property name="serviceRegistry">
+			<ref bean="ServiceRegistry" />
+		</property>
+		<property name="signatureProviderFactory">
+            <ref bean="countersign.repositoryManagedSignatureProviderFactory" />
+        </property>
+		<property name="applicableTypes">
+            <list>
+                <value>{http://www.alfresco.org/model/content/1.0}content</value>
+            </list>
+        </property>
+        <property name="alias">
+       		<value>${countersign.signature.alias}</value>
+   		</property>
+	</bean>
+	
+	<bean id="validate-signature-action"
+		class="org.alfresco.extension.countersign.action.executer.ValidateSignatureActionExecuter"
+		parent="action-executer" depends-on="countersign.bundles">
+		<property name="serviceRegistry">
+			<ref bean="ServiceRegistry" />
+		</property>
+		<property name="applicableTypes">
+            <list>
+                <value>{http://www.alfresco.org/model/content/1.0}content</value>
+            </list>
+        </property>
+	</bean>
+</beans>

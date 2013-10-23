@@ -1,0 +1,1 @@
+model.config = countersign.getConfig();

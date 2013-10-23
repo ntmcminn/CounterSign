@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Signatures Status</shortname>
+  <description>Signature Status Component - Validation of each applied signature</description>
+  <url>/components/signature/signature-status</url>
+</webscript>

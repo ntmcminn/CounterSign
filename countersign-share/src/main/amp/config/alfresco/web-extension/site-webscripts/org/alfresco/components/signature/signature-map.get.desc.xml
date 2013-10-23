@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Document Signatures Map View</shortname>
+  <description>Document Signatures Component - Map View from Geolocation Data</description>
+  <url>/components/signature/signature-map</url>
+</webscript>

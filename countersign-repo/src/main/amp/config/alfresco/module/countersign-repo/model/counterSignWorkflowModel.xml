@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Definition of new Model -->
+<model name="csignwf:workflowModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+    
+    <description>CounterSign for Alfresco - Workflow Content Model</description>
+    <author>Nathan McMinn</author>
+    <version>1.0</version>
+
+    <imports>
+        <!-- Import Alfresco Dictionary Definitions -->
+        <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+        <!-- Import Alfresco Content Domain Model Definitions -->
+        <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+        <!-- Import Activiti workflow model -->
+        <import uri="http://www.alfresco.org/model/workflow/1.0" prefix="wf" />
+        <!-- Import BPM workflow model -->
+        <import uri="http://www.alfresco.org/model/bpm/1.0" prefix="bpm" />
+    </imports>
+    
+    <!-- create the PDF toolkit namespace -->
+    <namespaces>
+        <namespace uri="http://countersign.it/model/workflow/1.0" prefix="csignwf" />
+    </namespaces>
+
+    <types>
+        
+        <!-- Signature workflow start task-->
+        <type name="csignwf:signatureStartTask">
+            <title>Start Signature Workflow</title>
+            <parent>bpm:startTask</parent>
+            <mandatory-aspects>
+            	<aspect>bpm:assignee</aspect>
+         	</mandatory-aspects>
+        </type>
+        
+        <!-- Signature workflow signing task -->
+        <type name="csignwf:signingTask">
+            <title>Sign Document</title>
+            <parent>bpm:activitiOutcomeTask</parent>
+            <properties>
+				<!-- signature password -->
+				<property name="csignwf:password">
+				    <type>d:text</type>
+				</property>
+				<!-- signature position (if user selectable) -->
+				<property name="csignwf:position">
+				    <type>d:text</type>
+				</property>
+				<!-- signature location -->
+				<property name="csignwf:location">
+				    <type>d:text</type>
+				</property>
+				<!-- signature reason -->
+				<property name="csignwf:reason">
+				    <type>d:text</type>
+				</property>
+				<!-- signature visibility -->
+				<property name="csignwf:visibility">
+				    <type>d:boolean</type>
+				</property>
+				<!-- use graphic signature -->
+				<property name="csignwf:graphic">
+				    <type>d:boolean</type>
+				</property>
+                <property name="csignwf:signatureOutcome">
+                    <type>d:text</type>
+                    <default>Reject</default>
+                    <constraints>
+                        <constraint name="csignwf:singatureOutcomeOptions" type="LIST">
+                            <parameter name="allowedValues">
+                                <list>
+                                    <value>Signed</value>
+                                    <value>Reject</value>
+                                </list>
+                            </parameter>
+                        </constraint>
+                    </constraints>
+                </property>
+            </properties>
+            <overrides>
+                <property name="bpm:packageItemActionGroup">
+                    <default>read_package_item_actions</default>
+                </property>
+                <property name="bpm:outcomePropertyName">
+                    <default>{http://countersign.it/model/workflow/1.0}signatureOutcome</default>
+                </property>
+            </overrides>
+        </type>
+        
+        <type name="csignwf:confirmSignatureTask">
+        	<title>Confirm Signature</title>
+        	<parent>bpm:activitiOutcomeTask</parent>
+        	<properties>
+        		<property name="csignwf:confirmSignatureOutcome">
+                    <type>d:text</type>
+                    <default>Accept Signature</default>
+                    <constraints>
+                        <constraint name="csignwf:confirmSignatureOutcomeOptions" type="LIST">
+                            <parameter name="allowedValues">
+                                <list>
+                                    <value>Accept Signature</value>
+                                    <value>Reject Signature</value>
+                                </list>
+                            </parameter>
+                        </constraint>
+                    </constraints>
+                </property>
+            </properties>
+        	<overrides>
+                <property name="bpm:packageItemActionGroup">
+                    <default>read_package_item_actions</default>
+                </property>
+                <property name="bpm:outcomePropertyName">
+                    <default>{http://countersign.it/model/workflow/1.0}confirmSignatureOutcome</default>
+                </property>
+            </overrides>
+         	<mandatory-aspects>
+            	<aspect>bpm:assignee</aspect>
+        	</mandatory-aspects>
+      	</type>
+
+      	<type name="csignwf:rejectedTask">
+      		<title>Signature Rejected</title>
+        	<parent>bpm:workflowTask</parent>
+        	<mandatory-aspects>
+            	<aspect>bpm:assignee</aspect>
+        	</mandatory-aspects>
+      	</type>
+    </types>
+</model>

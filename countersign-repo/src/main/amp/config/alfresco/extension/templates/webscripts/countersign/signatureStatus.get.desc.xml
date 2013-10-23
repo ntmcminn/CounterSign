@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Signature Status</shortname>
+  <description>Get signature status (validity)</description>
+  <url>/countersign/signatureStatus?{nodeRef}</url>
+  <format default="json">extension</format>
+  <authentication>user</authentication>
+  <family>countersign</family>
+</webscript>

@@ -1,0 +1,1 @@
+model.pageCount = countersign.getPageCount(args["nodeRef"]);

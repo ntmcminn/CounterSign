@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>signature-form-mgr</shortname>
+  <description>Signature Form Manager Component</description>
+  <url>/components/signature/form-mgr/signature-form-mgr</url>
+</webscript>

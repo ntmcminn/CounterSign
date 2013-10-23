@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE beans PUBLIC '-//SPRING//DTD BEAN//EN' 'http://www.springframework.org/dtd/spring-beans.dtd'>
+
+<beans>
+
+	<!-- Add messages for CounterSign extension -->
+	<bean id="countersign.resources"
+		class="org.springframework.extensions.surf.util.ResourceBundleBootstrapComponent">
+		<property name="resourceBundles">
+			<list>
+				<value>alfresco.messages.countersign</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- evaluator to only show actions on correct signable mime type(s) -->
+	<bean id="evaluator.countersign.doclib.action.signableMimetype" parent="evaluator.doclib.action.isMimetype">
+		<property name="mimetypes">
+			<list>
+				<value>application/pdf</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- evaluator to show indicator if doc is signed -->
+	<bean id="evaluator.countersign.doclib.indicator.isDocumentSigned" class="org.alfresco.web.evaluator.HasAspectEvaluator">
+		<property name="aspects">
+			<list>
+				<value>csign:signed</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- subcomponent evaluator -->
+	<bean id="signature.type.evaluator" class="org.alfresco.extension.countersign.evaluators.CounterSignSignatureTypeEvaluator"/>
+	
+</beans>

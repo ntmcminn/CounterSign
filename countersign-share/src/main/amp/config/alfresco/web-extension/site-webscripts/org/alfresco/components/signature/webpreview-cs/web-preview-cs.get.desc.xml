@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>CounterSign Web Preview</shortname>
+  <description>Displays a web preview of a document that supports drawable regions for signing</description>
+  <url>/components/signature/web-preview-cs</url>
+</webscript>

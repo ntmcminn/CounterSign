@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>countersign-share</artifactId>
+    <name>CounterSign for Alfresco - Share</name>
+    <packaging>amp</packaging>
+    <description>Alfresco Share extensions / customizations for CounterSign
+
+/*
+ * Copyright 2012-2013 Alfresco Software Limited.
+ * 
+ * Licensed under the GNU Affero General Public License, Version 3.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.gnu.org/licenses/agpl-3.0.html
+ * 
+ * If you do not wish to be bound to the terms of the AGPL v3.0, 
+ * A commercial license may be obtained by contacting the author.
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * This file is part of an unsupported extension to Alfresco.
+ * 
+ */</description>
+
+    <parent>
+        <groupId>org.alfresco.extension</groupId>
+        <artifactId>countersign</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <!--
+    Following dependencies are needed for compiling
+    Java code in src/main/java; <scope>provided</scope>
+    is inherited for each of the following; for more
+    info, please refer to alfresco-integration-parent
+    POM definition
+    @TODO - document
+    -->
+    <dependencies>
+        <dependency>
+            <groupId>${alfresco.groupId}</groupId>
+            <artifactId>alfresco-share</artifactId>
+            <version>${alfresco.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    
+    <properties>
+        <!-- This property allow to switch Repo AMP vs Share AMP. 
+             Set alfresco.client.war=share to run this AMP against Share
+         -->
+        <alfresco.client.war>share</alfresco.client.war>
+    </properties>
+    
+    <build>
+        <plugins>
+          <plugin>
+	          <groupId>org.apache.maven.plugins</groupId>
+	          <artifactId>maven-resources-plugin</artifactId>
+	          <version>${maven.resources.version}</version>
+	          <configuration>
+	            <encoding>UTF-8</encoding>
+	            <nonFilteredFileExtensions>
+	              <nonFilteredFileExtension>ftl</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>acp</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>jpg</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>png</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>gif</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>doc</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>xls</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>ppt</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>bin</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>lic</nonFilteredFileExtension>
+	              <nonFilteredFileExtension>swf</nonFilteredFileExtension>
+	            </nonFilteredFileExtensions>
+	          </configuration>
+        	</plugin>
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>yuicompressor-maven-plugin</artifactId>
+				<version>1.3.2</version>
+				<executions>
+					<execution>
+						<id>minimize-slingshot-javascript</id>
+						<goals>
+							<goal>compress</goal>
+						</goals>
+						<phase>prepare-package</phase>
+					</execution>
+				</executions>
+				<configuration>
+				    <jswarn>false</jswarn>
+				    <encoding>UTF-8</encoding>
+				    <includes>
+				        <include>**/*.js</include>
+                    </includes>  
+				    <excludes>
+                        <exclude>**/*-min.js</exclude>
+                    </excludes>
+                    <sourceDirectory>${project.build.directory}/classes/META-INF</sourceDirectory>
+                    <outputDirectory>${project.build.directory}/classes/META-INF</outputDirectory>
+                    <excludeResources>true</excludeResources>
+					<!-- <nocompress>true</nocompress> -->
+					<!-- <disableOptimizations>true</disableOptimizations> -->
+					<!-- <nosuffix>true</nosuffix> -->
+					<!-- <preserveAllSemiColons>true</preserveAllSemiColons> -->
+					<!-- <nomunge>true</nomunge> -->
+		  		</configuration>
+			</plugin>
+        </plugins>
+    </build>
+</project>

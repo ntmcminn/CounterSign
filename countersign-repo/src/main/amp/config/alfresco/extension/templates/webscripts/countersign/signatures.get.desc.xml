@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Document Signatures</shortname>
+  <description>Get document signatures</description>
+  <url>/countersign/signatures?{nodeRef}</url>
+  <format default="json">extension</format>
+  <authentication>user</authentication>
+  <family>countersign</family>
+</webscript>

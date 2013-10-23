@@ -1,0 +1,6 @@
+<webscript>
+   <shortname>My Signed Documents</shortname>
+   <description>Shows documents signed by the current user</description>
+   <family>user-dashlet</family>
+   <url>/components/dashlets/countersign/my-signed-documents</url>
+</webscript>

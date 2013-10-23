@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<!-- load the custom content model -->
+	<bean id="countersign.signatureModel" parent="dictionaryModelBootstrap" depends-on="dictionaryBootstrap">
+		<property name="models">
+			<list>
+				<value>alfresco/module/countersign-repo/model/counterSignModel.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- load the countersign workflow definitions and supporting model -->
+    <bean id="countersign.workflowBootstrap" parent="workflowDeployer" depends-on="workflowBootstrap">
+       <property name="workflowDefinitions">
+          <list>
+             <!-- CounterSign workflow definitions -->
+             <props>
+                <prop key="engineId">activiti</prop>
+                <prop key="location">alfresco/module/countersign-repo/workflow/send-for-signature.bpmn</prop>
+                <prop key="mimetype">text/xml</prop>
+                <prop key="redeploy">true</prop>
+             </props>
+          </list>
+       </property>
+       <property name="models">
+          <list>
+             <value>alfresco/module/countersign-repo/model/counterSignWorkflowModel.xml</value>
+          </list>
+       </property>
+    </bean>
+	
+	<bean id="countersign.bundles" class="org.alfresco.i18n.ResourceBundleBootstrapComponent">
+		<property name="resourceBundles">
+			<list>
+				<value>alfresco.module.countersign-repo.messages.countersign-labels</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- constraints for the various types -->
+	<!-- In these constraints, the key is the value that will be set for the parameter, the 
+	"value" is the display text for the resulting select box -->
+	
+	<!-- visibility constraint is used by digital signatures, indicates whether sig is visible after application -->
+	<bean id="countersign.visibility" class="org.alfresco.extension.countersign.constraints.MapConstraint" parent="action-constraint">
+		<property name="constraintMap">
+			<map>
+				<entry key="hidden" value="Hidden"/>
+				<entry key="visible" value="Visible"/>
+			</map>
+		</property>
+	</bean>    
+	
+	<!-- key type constraint is used by digital signatures -->
+	<bean id="countersign.keytype" class="org.alfresco.extension.countersign.constraints.MapConstraint" parent="action-constraint">
+		<property name="constraintMap">
+			<map>
+				<entry key="default" value="Default"/>
+				<entry key="pkcs12" value="PKCS12"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!--  position constraint, used by watermark and digital signature actions -->
+	<bean id="countersign.position" class="org.alfresco.extension.countersign.constraints.MapConstraint" parent="action-constraint">
+		<property name="constraintMap">
+			<map>
+				<entry key="topleft" value="Top left"/>
+				<entry key="topright" value="Top right"/>
+				<entry key="center" value="Center"/>
+				<entry key="bottomleft" value="Bottom left"/>
+				<entry key="bottomright" value="Bottom right"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="countersign.config.properties" parent="common-placeholder-configurer">
+		<property name="ignoreResourceNotFound">
+        	<value>true</value>
+        </property>
+	    <property name="locations">
+	        <list>
+	            <value>classpath:alfresco/module/countersign-repo/config/countersign-config.properties</value>
+	            <value>classpath:alfresco-global.properties</value>
+	        </list>
+	    </property>
+    </bean>
+	
+    <bean id="countersign.client.config" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	  	<property name="properties">
+	    	<props>
+	      		<prop key="countersign.leaflet.mapurl">${countersign.leaflet.mapurl}</prop>
+	      		<prop key="countersign.leaflet.attribution">${countersign.leaflet.attribution}</prop>
+	      		<prop key="countersign.display.dateFormat">${countersign.display.dateFormat}</prop>
+	      		<prop key="countersign.passwordStrength.minLength">${countersign.passwordStrength.minLength}</prop>
+	      		<prop key="countersign.passwordStrength.goodScore">${countersign.passwordStrength.goodScore}</prop>
+	      		<prop key="ccountersign.passwordStrength.strongScore">${countersign.passwordStrength.strongScore}</prop>
+	    	</props>
+	  	</property>
+  	</bean>
+    
+	<import resource="classpath:alfresco/module/countersign-repo/context/service-context.xml" />
+</beans>

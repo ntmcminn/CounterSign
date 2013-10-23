@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Signature Toolbar</shortname>
+  <description>Common toolbar for all signature related pages</description>
+  <url>/components/signature/toolbar/signature-toolbar</url>
+</webscript>

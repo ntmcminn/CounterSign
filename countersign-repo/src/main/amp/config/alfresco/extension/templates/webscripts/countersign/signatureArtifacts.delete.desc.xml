@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Delete User Signature Artifacts</shortname>
+  <description>Delete the user's signature artifacts (sig image, keystore)</description>
+  <url>/countersign/user/signatureartifacts</url>
+  <format default="json">extension</format>
+  <authentication>user</authentication>
+  <family>countersign</family>
+</webscript>

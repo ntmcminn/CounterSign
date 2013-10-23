@@ -1,0 +1,62 @@
+.countersign-datatable table
+{
+   border: medium none !important;
+   width: 100%;
+}
+
+.countersign-datatable tbody
+{
+   outline: none;
+}
+
+.countersign-datatable tbody,
+.countersign-datatable tr.yui-dt-highlighted,
+.countersign-datatable tr.yui-dt-even,
+.countersign-datatable tr.yui-dt-odd,
+.countersign-datatable yui-dt-empty
+{
+   background-color: transparent !important;
+   cursor: default !important;
+}
+
+.countersign-datatable td
+{
+   border-bottom: 1px dashed #d9d9d9 !important;
+   border-right: medium none !important;
+   vertical-align: top;
+}
+
+.countersign-datatable tr.yui-dt-last td
+{
+   border-bottom: none !important;
+}
+
+.countersign-datatable td .yui-dt-liner
+{
+   padding: 4px;
+}
+
+.countersign-datatable table .yui-dt-message td
+{
+   border: medium none !important;
+}
+
+.countersign-datatable table tr.yui-dt-highlighted,
+.countersign-datatable table tr.yui-dt-highlighted td.yui-dt-asc,
+.countersign-datatable table tr.yui-dt-highlighted td.yui-dt-desc,
+.countersign-datatable table tr.yui-dt-even td.yui-dt-highlighted,
+.countersign-datatable table tr.yui-dt-odd td.yui-dt-highlighted
+{
+   cursor: default;
+}
+
+.countersign-datatable table tr td a
+{
+   cursor: pointer;
+}
+
+link-pad
+{
+	width: 2em;
+	display: inline;
+}

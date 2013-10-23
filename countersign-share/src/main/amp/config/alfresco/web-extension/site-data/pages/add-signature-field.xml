@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <title>Add Signature Field</title>
+   <title-id>page.addSignatureField.title</title-id>
+   <description>Add a signature field to a PDF document</description>
+   <description-id>page.addSignatureField.description</description-id>
+   <template-instance>add-signature-field</template-instance>
+   <authentication>user</authentication>
+</page>

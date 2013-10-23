@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://alfresco.org">
+  <process id="counterSignSendForSignature" name="CounterSign - Send for Signature" isExecutable="true">
+    <startEvent id="start" name="Start Signature Workflow" activiti:formKey="csignwf:signatureStartTask"></startEvent>
+    <sequenceFlow id="flow1" sourceRef="start" targetRef="signTask"></sequenceFlow>
+    <userTask id="signTask" name="Sign Document" activiti:assignee="${bpm_assignee.properties.userName}" activiti:formKey="csignwf:signingTask">
+      <documentation>Task to be completed when user is assigned to digitally sign a document.</documentation>
+      <extensionElements>
+        <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="script">
+            <activiti:string>if (typeof bpm_workflowDueDate != 'undefined') task.dueDate = bpm_workflowDueDate
+                        if (typeof bpm_workflowPriority != 'undefined') task.priority = bpm_workflowPriority;</activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+        <activiti:taskListener event="complete" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="script">
+            <activiti:string>execution.setVariable('csignwf_signatureOutcome', task.getVariable('csignwf_signatureOutcome'));</activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow2" sourceRef="signTask" targetRef="reviewDecision"></sequenceFlow>
+    <exclusiveGateway id="reviewDecision" name="Review Decision"></exclusiveGateway>
+    <sequenceFlow id="flow3" sourceRef="reviewDecision" targetRef="signed">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${csignwf_signatureOutcome == 'Signed'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="reviewDecision" targetRef="rejected"></sequenceFlow>
+    <userTask id="signed" name="Confirm Signature" activiti:assignee="${initiator.exists() ? initiator.properties.userName : 'admin'}" activiti:formKey="csignwf:confirmSignatureTask">
+      <documentation>The document was signed, initiator must confirm the signature</documentation>
+      <extensionElements>
+        <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="script">
+            <activiti:string>if (typeof bpm_workflowDueDate != 'undefined') task.dueDate = bpm_workflowDueDate
+                        if (typeof bpm_workflowPriority != 'undefined') task.priority = bpm_workflowPriority;</activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+        <activiti:taskListener event="complete" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="script">
+            <activiti:string>execution.setVariable('csignwf_confirmSignatureOutcome', task.getVariable('csignwf_confirmSignatureOutcome'));</activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="rejected" name="Document Rejected" activiti:assignee="${initiator.exists() ? initiator.properties.userName : 'admin'}" activiti:formKey="csignwf:rejectedTask">
+      <documentation>The document was reviewed and rejected.</documentation>
+      <extensionElements>
+        <activiti:taskListener event="create" class="org.alfresco.repo.workflow.activiti.tasklistener.ScriptTaskListener">
+          <activiti:field name="script">
+            <activiti:string>if (typeof bpm_workflowDueDate != 'undefined') task.dueDate = bpm_workflowDueDate
+                        if (typeof bpm_workflowPriority != 'undefined') task.priority = bpm_workflowPriority;</activiti:string>
+          </activiti:field>
+        </activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow5" sourceRef="signed" targetRef="exclusivegateway1"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="rejected" targetRef="end"></sequenceFlow>
+    <endEvent id="end"></endEvent>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow7" sourceRef="exclusivegateway1" targetRef="end">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${csignwf_confirmSignatureOutcome == 'Accept Signature'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="exclusivegateway1" targetRef="signTask"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_counterSignSendForSignature">
+    <bpmndi:BPMNPlane bpmnElement="counterSignSendForSignature" id="BPMNPlane_counterSignSendForSignature">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="35.0" width="35.0" x="30.0" y="200.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="reviewDecision" id="BPMNShape_reviewDecision">
+        <omgdc:Bounds height="40.0" width="40.0" x="290.0" y="197.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="rejected" id="BPMNShape_rejected">
+        <omgdc:Bounds height="55.0" width="105.0" x="390.0" y="297.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="35.0" width="35.0" x="555.0" y="307.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="signTask" id="BPMNShape_signTask">
+        <omgdc:Bounds height="55.0" width="105.0" x="125.0" y="190.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="signed" id="BPMNShape_signed">
+        <omgdc:Bounds height="55.0" width="105.0" x="390.0" y="190.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="552.0" y="197.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="65.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="125.0" y="217.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="230.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="290.0" y="217.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="330.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="390.0" y="217.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="310.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="310.0" y="324.0"></omgdi:waypoint>
+        <omgdi:waypoint x="390.0" y="324.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="495.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="552.0" y="217.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="495.0" y="324.0"></omgdi:waypoint>
+        <omgdi:waypoint x="555.0" y="324.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="572.0" y="237.0"></omgdi:waypoint>
+        <omgdi:waypoint x="572.0" y="307.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="572.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="571.0" y="119.0"></omgdi:waypoint>
+        <omgdi:waypoint x="393.0" y="119.0"></omgdi:waypoint>
+        <omgdi:waypoint x="177.0" y="119.0"></omgdi:waypoint>
+        <omgdi:waypoint x="177.0" y="190.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

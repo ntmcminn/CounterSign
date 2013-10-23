@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<page>
+   <title>Validate Signatures</title>
+   <title-id>page.validateSignatures.title</title-id>
+   <description>Validate attached signatures</description>
+   <description-id>page.validateSignatures.description</description-id>
+   <template-instance>validate-signatures</template-instance>
+   <authentication>user</authentication>
+</page>

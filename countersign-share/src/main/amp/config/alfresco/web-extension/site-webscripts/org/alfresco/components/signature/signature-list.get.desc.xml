@@ -1,0 +1,5 @@
+<webscript>
+  <shortname>Document Signatures List View</shortname>
+  <description>Document Signatures Component - Simple List View</description>
+  <url>/components/signature/signature-list</url>
+</webscript>

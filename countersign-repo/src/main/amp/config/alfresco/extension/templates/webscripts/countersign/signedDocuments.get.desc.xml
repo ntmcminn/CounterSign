@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Signed Documents</shortname>
+  <description>Get documents signed by the current user</description>
+  <url>/countersign/signeddocuments?{maxDocs}&amp;{range}</url>
+  <format default="json">extension</format>
+  <authentication>user</authentication>
+  <family>countersign</family>
+</webscript>

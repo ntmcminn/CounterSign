@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>countersign-repo</artifactId>
+    <name>CounterSign for Alfresco - Repo</name>
+    <packaging>amp</packaging>
+    <description>Alfresco Repository extensions / customizations for CounterSign
+
+/*
+ * Copyright 2012-2013 Alfresco Software Limited.
+ * 
+ * Licensed under the GNU Affero General Public License, Version 3.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.gnu.org/licenses/agpl-3.0.html
+ * 
+ * If you do not wish to be bound to the terms of the AGPL v3.0, 
+ * A commercial license may be obtained by contacting the author.
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * This file is part of an unsupported extension to Alfresco.
+ * 
+ */</description>
+
+    <parent>
+        <groupId>org.alfresco.extension</groupId>
+        <artifactId>countersign</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <!--
+    Following dependencies are needed for compiling
+    Java code in src/main/java; <scope>provided</scope>
+    is inherited for each of the following; for more
+    info, please refer to alfresco-integration-parent
+    POM definition
+    @TODO - document
+    -->
+    <dependencies>
+        <dependency>
+            <groupId>${alfresco.groupId}</groupId>
+            <artifactId>alfresco-repository</artifactId>
+        </dependency>
+        <dependency>
+			<groupId>${alfresco.groupId}</groupId>
+			<artifactId>alfresco-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${alfresco.groupId}</groupId>
+			<artifactId>alfresco-data-model</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${alfresco.groupId}</groupId>
+			<artifactId>alfresco-web-client</artifactId>
+			<exclusions>
+               <exclusion>
+                   <groupId>axis2</groupId>
+                   <artifactId>addressing</artifactId>
+               </exclusion>
+           </exclusions>
+		</dependency>
+		<dependency>
+		  	<groupId>org.springframework.extensions.surf</groupId>
+		  	<artifactId>spring-webscripts</artifactId>
+		  	<version>1.0.0</version>
+		  	<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>3.2.0.M1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.myfaces.core</groupId>
+			<artifactId>myfaces-api</artifactId>
+			<version>1.1.8</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.0.6</version>
+			<type>jar</type>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+		  	<groupId>rhino</groupId>
+		  	<artifactId>js</artifactId>
+		  	<version>1.6R7-patched</version>
+		  	<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15</artifactId>
+			<version>1.45</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcmail-jdk15</artifactId>
+			<version>1.45</version>
+			<scope>provided</scope>
+		</dependency>
+    </dependencies>
+    
+    <properties>
+        <!-- This property allow to switch Repo AMP vs Share AMP. 
+             Set alfresco.client.war=share to run this AMP against Share
+         -->
+        <alfresco.client.war>alfresco</alfresco.client.war>
+    </properties>
+    
+</project>

@@ -1,0 +1,22 @@
+input.position-radio
+{
+	width:1em;
+}
+
+div.position-radio-separator
+{
+	display:inline;
+	border-left:2px solid #606060;
+	margin-left:2px;
+	margin-right:6px;
+}
+
+div.radio-container
+{
+	display:inline-block;
+}
+
+label.inlinelabel
+{
+	display: inline;
+}
