@@ -91,10 +91,10 @@ public abstract class AbstractSignatureActionExecuter extends
      */
     protected Rectangle positionBlock(Rectangle pageRect, JSONObject box)
     {
-    	float startX = Integer.parseInt(String.valueOf(box.get("startX")));
-    	float startY = Integer.parseInt(String.valueOf(box.get("startY")));
-    	float endX = Integer.parseInt(String.valueOf(box.get("endX")));
-    	float endY = Integer.parseInt(String.valueOf(box.get("endY")));
+    	float startX = Float.parseFloat(String.valueOf(box.get("startX")));
+    	float startY = Float.parseFloat(String.valueOf(box.get("startY")));
+    	float endX = Float.parseFloat(String.valueOf(box.get("endX")));
+    	float endY = Float.parseFloat(String.valueOf(box.get("endY")));
     	
     	// make sure that the ll and ur coordinates match iText's expectations
     	startY = pageRect.getHeight() - startY;
