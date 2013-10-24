@@ -51,7 +51,12 @@ AGPL License.  The following components are used in CounterSign, and retain thei
 as noted in the source code
 
 iText - Affero GPL 3 (http://itextpdf.com/terms-of-use/agpl.php)
+
 jQuery - MIT License (https://jquery.org/license/)
+
 LeafletJS - custom open source license (https://github.com/Leaflet/Leaflet/blob/master/LICENSE)
+
 JQuery SignaturePad - BSD (http://thomasjbradley.ca/lab/signature-pad/#license)
+
 TimelineJS - Mozilla Public License 2.0 (https://github.com/VeriteCo/TimelineJS#license)
+
