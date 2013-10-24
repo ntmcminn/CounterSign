@@ -12,7 +12,7 @@
    <#local signatureLinkResolver>
 	function(item)
 	{
-	   return Alfresco.util.siteURL("sign-document?nodeRef=" + item.nodeRef, { site: item.site });
+	   return Alfresco.util.siteURL("sign-document?nodeRef=" + item.nodeRef, { site: item.site } + "&sigType=pdf");
 	}
    </#local>
 
