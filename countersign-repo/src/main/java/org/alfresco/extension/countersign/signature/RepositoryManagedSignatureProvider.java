@@ -605,12 +605,17 @@ public class RepositoryManagedSignatureProvider implements SignatureProvider
 		Map<QName, Serializable> props = serviceRegistry.getNodeService().getProperties(person);
 		String firstName = String.valueOf(props.get(ContentModel.PROP_FIRSTNAME));
 		String lastName = String.valueOf(props.get(ContentModel.PROP_LASTNAME));
-		java.util.Date startDate = new java.util.Date();
+		
+		// backdate the start date by a day
+		Calendar start = Calendar.getInstance();
+		start.add(Calendar.DATE, -1);
+		java.util.Date startDate = start.getTime();
 		
 		// what is the end date for this cert's validity?
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.DATE, validDuration);
-
+		Calendar end = Calendar.getInstance();
+		end.add(Calendar.DATE, validDuration);
+		java.util.Date endDate = end.getTime();
+		
 		try
 		{
 			// This code works with newer versions of the BouncyCastle libraries, but not
@@ -639,7 +644,7 @@ public class RepositoryManagedSignatureProvider implements SignatureProvider
 
 			certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
 			certGen.setNotBefore(startDate);
-			certGen.setNotAfter(cal.getTime());
+			certGen.setNotAfter(endDate);
 			certGen.setSubjectDN(subjectName);
 			certGen.setPublicKey(keyPair.getPublic());
 			certGen.setSignatureAlgorithm("SHA256WithRSAEncryption");
