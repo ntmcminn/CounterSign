@@ -114,8 +114,8 @@ public class PDFSignatureProviderActionExecuter extends
     	
         paramList.add(new ParameterDefinitionImpl(PARAM_ALIAS, DataTypeDefinition.TEXT, false, getParamDisplayLabel(PARAM_ALIAS)));
         paramList.add(new ParameterDefinitionImpl(PARAM_SIGNATURE_JSON, DataTypeDefinition.TEXT, false, getParamDisplayLabel(PARAM_SIGNATURE_JSON)));
-        paramList.add(new ParameterDefinitionImpl(PARAM_VISIBLE, DataTypeDefinition.BOOLEAN, true, getParamDisplayLabel(PARAM_VISIBLE)));
-        paramList.add(new ParameterDefinitionImpl(PARAM_GRAPHIC, DataTypeDefinition.BOOLEAN, true, getParamDisplayLabel(PARAM_GRAPHIC)));
+        paramList.add(new ParameterDefinitionImpl(PARAM_VISIBLE, DataTypeDefinition.BOOLEAN, false, getParamDisplayLabel(PARAM_VISIBLE)));
+        paramList.add(new ParameterDefinitionImpl(PARAM_GRAPHIC, DataTypeDefinition.BOOLEAN, false, getParamDisplayLabel(PARAM_GRAPHIC)));
         paramList.add(new ParameterDefinitionImpl(PARAM_POSITION, DataTypeDefinition.TEXT, false, getParamDisplayLabel(PARAM_POSITION), false, "countersign.position"));
     }
 

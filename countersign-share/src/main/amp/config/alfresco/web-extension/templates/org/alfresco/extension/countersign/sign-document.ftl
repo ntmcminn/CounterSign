@@ -8,7 +8,7 @@
 
 <@templateBody>
    <div id="alf-hd">
-      <@region id="header" scope="global"/>
+      <@region id="share-header" scope="global" chromeless="true"/>
       <@region id="title" scope="template"/>
       <@region id="signature-toolbar" scope="template"/>
    </div>

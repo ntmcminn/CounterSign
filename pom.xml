@@ -30,10 +30,16 @@
  */</description>
     <packaging>pom</packaging>    
 
-    <parent>
+    <!--<parent>
         <groupId>org.alfresco.maven</groupId>
         <artifactId>alfresco-sdk-parent</artifactId>
         <version>1.0.2</version>
+    </parent>-->
+    
+    <parent>
+        <groupId>org.alfresco.maven</groupId>
+        <artifactId>alfresco-sdk-parent</artifactId>
+        <version>1.1.1</version>
     </parent>
     
     <!-- 
@@ -42,8 +48,8 @@
        | For more available properties see the alfresco-sdk-parent POM. 
        -->
     <properties>
-        <alfresco.groupId>org.alfresco.enterprise</alfresco.groupId>
-        <alfresco.version>4.1.5</alfresco.version>
+        <alfresco.groupId>org.alfresco</alfresco.groupId>
+        <alfresco.version>4.2.1</alfresco.version>
         <!-- uncomment this and comment out lines above to switch between
         enterprise and community builds -->
         <!--<alfresco.groupId>org.alfresco</alfresco.groupId>
@@ -94,9 +100,9 @@
     <module>countersign-repo</module>
     <module>countersign-share</module>
     <!-- these modules are used in the debug environment (all-in-one archetype) -->
-    <!--<module>alfresco</module>
+    <module>alfresco</module>
     <module>solr</module>
     <module>share</module>
-    <module>runner</module>-->
+    <module>runner</module>
   </modules>
 </project>

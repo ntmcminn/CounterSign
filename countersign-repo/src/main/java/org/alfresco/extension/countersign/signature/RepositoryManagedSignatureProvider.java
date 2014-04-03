@@ -559,18 +559,7 @@ public class RepositoryManagedSignatureProvider implements SignatureProvider
 		PrivateKey priv = pair.getPrivate();
 		PublicKey pub = pair.getPublic();
 		
-		// generate the user certificate
-		Certificate cert = generateCertificate(pair, person);
-		
-		// get the ca cert used to sign and create cert chain
-		KeyStore trustedKs = getTrustedKeyStore();
-		Certificate[] caChain = getCaCertChain(trustedKs);
-		Certificate[] certChain = new Certificate[caChain.length + 1];
-		certChain[0] = cert;
-		for(int i = 0; i < caChain.length; i++)
-		{
-			certChain[i+1] = caChain[i];
-		}
+		Certificate[] certChain = getCertChain(pair, person);
 		
 		// create keystore, adding private key and cert chain
 		KeyStore ks = KeyStore.getInstance("pkcs12");
@@ -590,12 +579,48 @@ public class RepositoryManagedSignatureProvider implements SignatureProvider
 	}
 	
 	/**
+	 * Get a certificate chain, given a person and a keypair
+	 * @param pair
+	 * @param person
+	 * @return
+	 */
+	private Certificate[] getCertChain(KeyPair pair, NodeRef person)
+	{
+		boolean generateTrusted = Boolean.parseBoolean(config.getProperty(RepositoryManagedSignatureProviderFactory.ENABLE_TRUSTED_CERTS));
+		Certificate[] certChain;
+		
+		// generate the user certificate
+		Certificate cert = generateCertificate(pair, person, generateTrusted);
+		
+		// create a trusted cert chain if enabled
+		if(generateTrusted)
+		{
+			// get the ca cert used to sign and create cert chain
+			KeyStore trustedKs = getTrustedKeyStore();
+			Certificate[] caChain = getCaCertChain(trustedKs);
+			certChain = new Certificate[caChain.length + 1];
+			certChain[0] = cert;
+			for(int i = 0; i < caChain.length; i++)
+			{
+				certChain[i+1] = caChain[i];
+			}
+		}
+		else
+		{
+			certChain = new Certificate[1];
+			certChain[0] = cert;
+		}
+		
+		return certChain;
+	}
+	
+	/**
 	 * Generate an X509 cert for use as the keystore cert chain
 	 * 
 	 * @param keyPair
 	 * @return
 	 */
-	private X509Certificate generateCertificate(KeyPair keyPair, NodeRef person)
+	private X509Certificate generateCertificate(KeyPair keyPair, NodeRef person, boolean trusted)
 	{  
 		
 		X509Certificate cert = null;
@@ -650,8 +675,7 @@ public class RepositoryManagedSignatureProvider implements SignatureProvider
 			certGen.setSignatureAlgorithm("SHA256WithRSAEncryption");
 			
 			// if we are actually generating a trusted cert, the action is a little different
-			boolean generateTrusted = Boolean.parseBoolean(config.getProperty(RepositoryManagedSignatureProviderFactory.ENABLE_TRUSTED_CERTS));
-			if(generateTrusted)
+			if(trusted)
 			{
 				KeyStore trustedKs = getTrustedKeyStore();
 				
