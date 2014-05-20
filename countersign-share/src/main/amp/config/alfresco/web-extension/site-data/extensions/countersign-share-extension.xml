@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<extension xmlns="http://www.springframework.org/extensions/surf/extensibility">
+	<modules>
+		<module>
+			<id>Countersign Document Actions</id>
+			<description>This module provides the CounterSign signature links in the document library and detail views.</description>
+			<version>1.0</version>
+			<auto-deploy>true</auto-deploy>
+			<configurations>
+				<!-- Share config elements for the doclib actions -->
+				<config evaluator="string-compare" condition="DocLibActions">
+					<actions>
+						<!--
+						The sign-document action is for PDFs only (as they have special signature
+						needs and features
+						-->
+						<action id="sign-document" type="pagelink" label="actions.countersign.signDocument">
+						   <param name="page">sign-document?nodeRef={node.nodeRef}&amp;sigType=pdf</param>
+						   <evaluator>evaluator.countersign.doclib.action.signableMimetype</evaluator>
+						</action>
+			
+						<!--
+						The sign-content action can be used to generate a signature for any content
+						type, and store it as an externally attached signature. 
+						-->
+						<action id="sign-content" type="pagelink" label="actions.countersign.signDocument">
+						   <param name="page">sign-document?nodeRef={node.nodeRef}</param>
+						   <evaluator negate="true">evaluator.countersign.doclib.action.signableMimetype</evaluator>
+						</action>
+			
+						<!-- 
+						Viewing signatures can be done for any signed document type, as the shown data
+						is stored in the Alfresco signature node.  Works for both PDF and non-pdf.	
+						-->
+						<action id="view-signatures" type="pagelink" label="actions.countersign.viewSignatures">
+						   <param name="page">view-signatures?nodeRef={node.nodeRef}</param>
+						   <evaluator>evaluator.countersign.doclib.indicator.isDocumentSigned</evaluator>
+						</action>
+			
+						<!-- 
+						Show the "Add Signature Field" action, only for unsigned PDFs.  Once a doc is 
+						signed, a field cannot be added without invalidating the existing signatures.
+						 -->
+						<action id="add-signature-field" type="pagelink" label="actions.countersign.addSignatureField">
+						   <param name="page">add-signature-field?nodeRef={node.nodeRef}</param>
+						   <evaluator>evaluator.countersign.doclib.action.signableMimetype</evaluator>
+						   <evaluator negate="true">evaluator.countersign.doclib.indicator.isDocumentSigned</evaluator>
+						</action>
+			
+						<!-- 
+						validation should be a separate action from viewing, since validation
+						may be a computationally intense activity.  For now, only show the validation
+						page option for non-PDF docs, since PDFs can be easily validated offline
+						using Acrobat 
+						-->
+						<action id="validate-signatures" type="pagelink" label="actions.countersign.validateSignatures">
+						   <param name="page">validate-signatures?nodeRef={node.nodeRef}</param>
+						   <evaluator negate="true">evaluator.countersign.doclib.action.signableMimetype</evaluator>
+						   <evaluator>evaluator.countersign.doclib.indicator.isDocumentSigned</evaluator>
+						</action>
+					</actions>
+		
+					<actionGroups>
+						<actionGroup id="document-browse">
+							<action index="601" id="sign-document"/>
+							<action index="602" id="sign-content"/>
+							<action index="603" id="view-signatures"/>
+							<action index="604" id="add-signature-field"/>
+							<action index="605" id="validate-signatures"/>
+						</actionGroup>
+						<actionGroup id="document-details">
+							<action index="601" id="sign-document"/>
+							<action index="602" id="sign-content"/>
+							<action index="603" id="view-signatures"/>
+							<action index="604" id="add-signature-field"/>
+							<action index="605" id="validate-signatures"/>
+						</actionGroup>
+					</actionGroups>
+				</config>
+			</configurations>
+		</module>
+		<module>
+			<id>Countersign Advanced Search</id>
+			<description>This module provides advanced search extensions to find signed documents.</description>
+			<version>1.0</version>
+			<auto-deploy>true</auto-deploy>
+			<configurations>
+				<!-- Configure advanced search for pdft:signed aspect in Share -->
+				<config evaluator="string-compare" condition="AdvancedSearch">
+					<advanced-search>
+						<forms>
+							<form labelId="countersign.aspect.signed.search.type" 
+								descriptionId="countersign.aspect.signed.search.description" id="signeddocsearch">cm:content</form>
+						</forms>
+					</advanced-search>
+				</config>
+			</configurations>
+		</module>
+		<module>
+			<id>Countersign Advanced Search</id>
+			<description>This module provides advanced search extensions to find signed documents.</description>
+			<version>1.0</version>
+			<auto-deploy>true</auto-deploy>
+			<configurations>
+				<!-- Configure advanced search for pdft:signed aspect in Share -->
+				<config evaluator="string-compare" condition="AdvancedSearch">
+					<advanced-search>
+						<forms>
+							<form labelId="countersign.aspect.signed.search.type" 
+								descriptionId="countersign.aspect.signed.search.description" id="signeddocsearch">cm:content</form>
+						</forms>
+					</advanced-search>
+				</config>
+				<!-- Advanced search form for items with pdft:signed aspect -->
+				<config evaluator="model-type" condition="cm:content">
+					<forms>
+						<!-- search for signed PDF documents -->
+						<form id="signeddocsearch">
+							<field-visibility>
+								<show id="cm:name" force="true" />
+								<show id="cm:title" force="true" /> 
+								<show id="cm:description" force="true" /> 
+								<show id="cm:modified" force="true" />
+								<show id="cm:modifier" force="true" />
+								<show id="csign:signatureDate" force="true" />
+								<show id="csign:reason" force="true" />
+								<show id="csign:location" force="true" />
+							</field-visibility>
+				
+							<appearance>
+								<field id="cm:modifier">
+									<control>
+										<control-param name="forceEditable">true</control-param>
+									</control>
+								</field>
+								<field id="cm:modified">
+									<control template="/org/alfresco/components/form/controls/daterange.ftl" />
+								</field>
+								<field id="csign:signatureDate" label-id="prop.pdft_signaturedate">
+									<control template="/org/alfresco/components/form/controls/daterange.ftl" />
+								</field>
+								<field id="csign:reason" label-id="prop.pdft_reason">
+									<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+								</field>
+								<field id="csign:location" label-id="prop.pdft_location">
+									<control template="/org/alfresco/components/form/controls/textfield.ftl" />
+								</field>
+							</appearance>
+						</form>
+					</forms>
+				</config>
+			</configurations>
+		</module>
+	</modules>
+</extension>
