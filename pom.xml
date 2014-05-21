@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.alfresco.extension</groupId>
     <artifactId>countersign</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>CounterSign for Alfresco</name>
     <description>CounterSign for Alfresco is an open-source digital signature extension for Alfresco
 
@@ -49,7 +49,7 @@
        -->
     <properties>
         <alfresco.groupId>org.alfresco</alfresco.groupId>
-        <alfresco.version>4.2.1</alfresco.version>
+        <alfresco.version>4.2.0.3</alfresco.version>
         <!-- uncomment this and comment out lines above to switch between
         enterprise and community builds -->
         <!--<alfresco.groupId>org.alfresco</alfresco.groupId>
