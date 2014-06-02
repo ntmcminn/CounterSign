@@ -224,7 +224,7 @@ if(typeof CounterSign == "undefined" || !CounterSign)
 				});
 		},
 
-		getPageCount: function getPageCount(nodeRef)
+		getPageCount: function SignaturePosition_getPageCount(nodeRef)
 		{
 			Alfresco.util.Ajax.jsonGet(
 				{
