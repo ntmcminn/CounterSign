@@ -100,9 +100,9 @@
     <module>countersign-repo</module>
     <module>countersign-share</module>
     <!-- these modules are used in the debug environment (all-in-one archetype) -->
-    <module>alfresco</module>
+    <!--<module>alfresco</module>
     <module>solr</module>
     <module>share</module>
-    <module>runner</module>
+    <module>runner</module>-->
   </modules>
 </project>
