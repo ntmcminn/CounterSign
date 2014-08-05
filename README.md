@@ -5,7 +5,7 @@ CounterSign is a digital / electronic signature solution for Alfresco.  It aims 
 
 Compliance:
 
-While no software can claim to be fully FDA CFR21 Part 11 compliant (as the regulation is as much about process as it is software), the generation of signatures that are compliaint with the regulation is one of the key design goals of this project.  The current release generates signatures that meet all of the requirements of CFR21 Part 11, and this standard will be maintained throughout future releases.
+While no software can claim to be fully FDA CFR21 Part 11 compliant (as the regulation is as much about process as it is software), the generation of signatures that are compliaint with the regulation is one of the key design goals of this project.  The current release generates signatures that I believe meet all of the requirements of CFR21 Part 11, and I will make my best effort to ensure that this is maintained throughout future releases.  Please note that compliance with regulations is ultimately the responsibility of the user, and compliance must be validated.  No warranty or guarantee of compliance is implied or offered.
 
 A.  BUILDING AND DEBUGGING COUNTERSIGN
 
