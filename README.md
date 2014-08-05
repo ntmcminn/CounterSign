@@ -1,6 +1,12 @@
 CounterSign
 ===========
 
+CounterSign is a digital / electronic signature solution for Alfresco.  It aims to be a self-contained set of extensions to the Alfresco environment that provides a simple signature environment for the end user.
+
+Compliance:
+
+While no software can claim to be fully FDA CFR21 Part 11 compliant (as the regulation is as much about process as it is software), the generation of signatures that are compliaint with the regulation is one of the key design goals of this project.  The current release generates signatures that meet all of the requirements of CFR21 Part 11, and this standard will be maintained throughout future releases.
+
 A.  BUILDING AND DEBUGGING COUNTERSIGN
 
 Some of the Maven operations (such as running the project) require some additional
